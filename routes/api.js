@@ -1,15 +1,15 @@
 'use strict';
-const axios = require("axios");
-const mongoose = require('mongoose');
+import { get } from "axios";
+import { Schema, model } from 'mongoose';
 
 
 // db Schema
-const stockSchema = new mongoose.Schema({
+const stockSchema = new Schema({
   name: {type: String, required: true},
   likes: {type: [String], default: []}
 });
 // creating a model based on the defined Schema
-const Stock = mongoose.model("Stock", stockSchema);
+const Stock = model("Stock", stockSchema);
 
 // function to save stockData in db
 async function saveStock(name, like, ip) {
@@ -35,7 +35,7 @@ async function saveStock(name, like, ip) {
 // function to GET stockData from API using axios libraries
 async function getStockData(name) {
   try {
-    const response = await axios.get(`https://stock-price-checker-proxy.freecodecamp.rocks/v1/stock/${name}/quote`);
+    const response = await get(`https://stock-price-checker-proxy.freecodecamp.rocks/v1/stock/${name}/quote`);
     return response.data;
   } catch (error) {
     throw new Error(`Fetch Error: Couldn't get stock ${name} data from the API. ${error.message}`);
@@ -72,7 +72,7 @@ function parseData(data, like) {
   return stockData.length === 1 ? stockData[0] : stockData;
 }
 
-module.exports = function (app) {
+export default function (app) {
 
   app.get('/api/stock-prices', async function (req, res) {
     try {
