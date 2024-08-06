@@ -1,15 +1,15 @@
 'use strict';
-import { get } from "axios";
-import { Schema, model } from 'mongoose';
+const axios = require("axios");
+const mongoose = require('mongoose');
 
 
 // db Schema
-const stockSchema = new Schema({
+const stockSchema = new mongoose.Schema({
   name: {type: String, required: true},
   likes: {type: [String], default: []}
 });
 // creating a model based on the defined Schema
-const Stock = model("Stock", stockSchema);
+const Stock = mongoose.model("Stock", stockSchema);
 
 // function to save stockData in db
 async function saveStock(name, like, ip) {
@@ -35,7 +35,7 @@ async function saveStock(name, like, ip) {
 // function to GET stockData from API using axios libraries
 async function getStockData(name) {
   try {
-    const response = await get(`https://stock-price-checker-proxy.freecodecamp.rocks/v1/stock/${name}/quote`);
+    const response = await axios.get(`https://stock-price-checker-proxy.freecodecamp.rocks/v1/stock/${name}/quote`);
     return response.data;
   } catch (error) {
     throw new Error(`Fetch Error: Couldn't get stock ${name} data from the API. ${error.message}`);
@@ -56,9 +56,9 @@ function parseData(data, like) {
       stock.likes++;
     }
     // The stockData property includes the stock symbol as a string, the price as a number, and likes as a number.
-    //console.log(data[i+1].symbol, "typeof stock", typeof(data[i+1].symbol));
-    //console.log(data[i + 1].close, "typeof price", typeof(parseFloat(data[i + 1].close)));
-    //console.log(data[i].likes, "typeof likes", typeof(parseInt(data[i].likes)));
+    console.log(data[i+1].symbol, "typeof stock", typeof(data[i+1].symbol));
+    console.log(data[i + 1].close, "typeof price", typeof(parseFloat(data[i + 1].close)));
+    console.log(data[i].likes, "typeof likes", typeof(parseInt(data[i].likes)));
     stockData.push(stock);
   }
   if (stockData.length === 2) {
@@ -72,7 +72,7 @@ function parseData(data, like) {
   return stockData.length === 1 ? stockData[0] : stockData;
 }
 
-export default function (app) {
+module.exports = function (app) {
 
   app.get('/api/stock-prices', async function (req, res) {
     try {

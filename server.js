@@ -2,25 +2,25 @@
 require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
-const cors = require("cors");
+/* const cors = require("cors"); */
 
 const apiRoutes = require("./routes/api.js");
 const fccTestingRoutes = require("./routes/fcctesting.js");
 const runner = require("./test-runner");
 
-const helmet = require("helmet");
+/* const helmet = require("helmet"); */
 require("./db-connection.js");
 
 const app = express();
 
 app.use("/public", express.static(process.cwd() + "/public"));
 
-app.use(cors({ origin: "*" })); //For FCC testing purposes only
+/* app.use(cors({ origin: "*" })); */ //For FCC testing purposes only
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(
+/* app.use(
   helmet({
     frameguard: {
       action: "deny",
@@ -34,7 +34,7 @@ app.use(
     },
     dnsPrefetchControl: false, // disable
   }),
-);
+); */
 app.enable("trust proxy");
 
 //Index page (static HTML)
